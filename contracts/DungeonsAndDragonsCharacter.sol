@@ -66,6 +66,7 @@ contract DungeonsAndDragonsCharacter is ERC721URIStorage, VRFConsumerBase {
         internal
         override
     {
+        uint256 tokenId = characters.length;
         int256 strength = (getLatestPrice() / 1000000000);
         uint256 dexterity = randomNumber % 100;
         uint256 constitution = uint256(keccak256(abi.encode(randomNumber, 1))) %
@@ -76,6 +77,18 @@ contract DungeonsAndDragonsCharacter is ERC721URIStorage, VRFConsumerBase {
         uint256 charisma = uint256(keccak256(abi.encode(randomNumber, 4))) %
             100;
         uint256 experience = 0;
+        Character memory character = Character(
+            strength,
+            dexterity,
+            constitution,
+            intelligence,
+            wisdom,
+            charisma,
+            experience,
+            requestToCharacterName[requestId]
+        );
+        characters.push(character);
+        _safeMint(requestToSender[requestId], tokenId);
     }
 
     function getLatestPrice() public view returns (int256) {
